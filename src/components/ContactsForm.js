@@ -5,7 +5,7 @@ import { SafeAreaProvider } from 'react-native-safe-area-context';
 import imageSample from '../../assets/1.jpg';
 import logoutImage from '../../assets/logout.png';
 import * as ImagePicker from 'expo-image-picker';
-import { addContact, updateContact } from '../services/contact.service';
+import { addContact, updateContact, removeContact } from '../services/contact.service';
 
 class ContactsForm extends React.Component {
     constructor(props) {
@@ -87,6 +87,12 @@ class ContactsForm extends React.Component {
         await updateContact( this.state.contact );
 
         this.toggleEditMode();
+    }
+
+    async deleteContact() {
+        await removeContact( this.state.contact._id );
+
+        this.props.navigation.navigate('Dashboard');
     }
 
     async pickImage() {
@@ -234,6 +240,12 @@ class ContactsForm extends React.Component {
                     </View>
                 </View>
 
+                {this.state.contact._id && <Icon type='material' color='#fff' size={23}
+                    name='delete'
+                    containerStyle={ styles.floatingDeleteContainer }
+                    onPress={ () => this.deleteContact() }
+                />}
+
                 <Icon type='material' color='#fff' size={33}
                     name={ this.state.contact._id && !this.state.editMode ? 'edit' : 'save' }
                     containerStyle={ styles.floatingButtonContainer }
@@ -325,6 +337,18 @@ const styles = StyleSheet.create({
         backgroundColor: '#ab2900',
         position: 'absolute',
         bottom: 10,
+        right: 10,
+        justifyContent: 'center',
+        alignItems: 'center',
+    },
+
+    floatingDeleteContainer: {
+        width: 45,
+        height: 45,
+        borderRadius: 30,
+        backgroundColor: '#ab2900',
+        position: 'absolute',
+        bottom: 85,
         right: 10,
         justifyContent: 'center',
         alignItems: 'center',

@@ -1,11 +1,10 @@
 import { KeyboardAvoidingView, StyleSheet, Text, View, TextInput, TouchableOpacity, Keyboard, ScrollView } from 'react-native';
 import React from 'react';
-import { Button, Icon, Image } from '@rneui/themed';
+import { Button, Header, Icon, Image } from '@rneui/themed';
 import Contact from './elements/Contact';
 import { removeData } from '../services/store.manager';
 import { getContacts } from '../services/contact.service';
-import { MaterialCommunityIcons } from '@expo/vector-icons';
-import Logout from './elements/Logout';
+import { SafeAreaProvider } from 'react-native-safe-area-context';
 
 /*let contacts = [ {_id: 1, name: 'Nel', lastName: 'Perez', phone: '8091134785', mobile: '8294651796', email: 'test@example.com'},
 {_id: 2, name: 'Nel', lastName: 'Perez', phone: '8091134785', mobile: '8294651796', email: 'test@example.com'}
@@ -61,46 +60,64 @@ class Dashboard extends React.Component {
 
   render() {
     return (
-      <View style={styles.container}>
-        <ScrollView
-          contentContainerStyle={{
-            flexGrow: 1
-          }}
-          keyboardShouldPersistTaps='handled'
-        >
-  
-          <View style={styles.tasksWrapper}>
-            <Text style={styles.sectionTitle}>Contacts</Text>
-            <View style={styles.items}>
-              <Image 
-                style = {styles.logo}
-                source= {require('../../assets/logo01.png')}
-              />
-              {
-                this.state.contacts.sort((a, b) => this.contactComparison(a, b))
-                .map((item, index) => {
-                  return (
-                    <TouchableOpacity key={index}  onPress={() => this.selectContact(item)}>
-                      {<Contact contacts={item} /> }
-                    </TouchableOpacity>
-                  )
-                })
-              }
+      <SafeAreaProvider>
+        <Header containerStyle={{ backgroundColor: '#F8F8F8' }}
+          leftComponent={
+            <View>
+              <Text style={{ fontWeight: 'bold', fontSize: '17px' }}>Contacts</Text>
             </View>
-          </View>
-        </ScrollView>
-
-        <Image source={ require('../../assets/logout.png') }
-          containerStyle={ styles.logoutButtonContainer }
-          onPress={() => this.logout()}
+          }
+          rightComponent={
+            <Image 
+              source={ require('../../assets/logo01.png') }
+              containerStyle={{ width: '100%', height: '100%' }}
+            />
+          }
         />
+        <View style={{ padding: 0, backgroundColor: '#FFA588', height: '45px' }}>
+            <Image 
+                source={ require('../../assets/user.png') }
+                containerStyle={{ width: '25px', height: '25px', position: 'absolute', left: '20px', bottom: '8px' }}
+            />
+        </View>
 
-        <Icon type='material' color='#fff' size={33}
-          name='add'
-          containerStyle={ styles.floatingButtonContainer }
-          onPress={ () => this.props.navigation.navigate('ContactsForm') }
-        />
-      </View>
+        <View style={styles.container}>
+          <ScrollView
+            contentContainerStyle={{
+              flexGrow: 1
+            }}
+            keyboardShouldPersistTaps='handled'
+          >
+    
+            <View style={styles.tasksWrapper}>
+              <Text style={styles.sectionTitle}>Contacts</Text>
+              <View style={styles.items}>
+                {
+                  this.state.contacts.sort((a, b) => this.contactComparison(a, b))
+                  .map((item, index) => {
+                    return (
+                      <TouchableOpacity key={index}  onPress={() => this.selectContact(item)}>
+                        {<Contact contacts={item} /> }
+                      </TouchableOpacity>
+                    )
+                  })
+                }
+              </View>
+            </View>
+          </ScrollView>
+
+          <Image source={ require('../../assets/logout.png') }
+            containerStyle={ styles.logoutButtonContainer }
+            onPress={() => this.logout()}
+          />
+
+          <Icon type='material' color='#fff' size={33}
+            name='add'
+            containerStyle={ styles.floatingButtonContainer }
+            onPress={ () => this.props.navigation.navigate('ContactsForm') }
+          />
+        </View>
+      </SafeAreaProvider>
     )
   }
 }
@@ -111,7 +128,7 @@ const styles = StyleSheet.create({
     backgroundColor: '#E8EAED',
   },
   tasksWrapper: {
-    paddingTop: 80,
+    paddingTop: 20,
     paddingHorizontal: 20,
   },
   sectionTitle: {
